@@ -40,7 +40,9 @@ jobs:
       matrix:
         include:
           - run: default
+            arch: arm64
           - run: default-x86
+            arch: amd64
 
     steps:
       - name: Checkout
