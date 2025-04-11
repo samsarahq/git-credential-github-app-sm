@@ -1,0 +1,49 @@
+name: build
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CGO_ENABLED: 0
+  GOWORK: off
+
+jobs:
+  build:
+    runs-on: default
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
+
+      - name: Test build
+        run: go build ...
+
+  docker:
+    runs-on: ${{ matrix.run }}
+
+    strategy:
+      matrix:
+        include:
+          - run: default
+          - run: default-x86
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and tag image
+        env:
+          REGISTRY: ghcr.io/samsarahq
+          REPOSITORY: git-credential-github-app-sm
+          IMAGE_TAG: ${{ github.sha }}-${{ matrix.arch }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .

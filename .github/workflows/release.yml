@@ -1,0 +1,84 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: default
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch package info
+        uses: andrewslotin/go-proxy-pull-action@v1.3.0
+
+  docker:
+    runs-on: ${{ matrix.run }}
+
+    strategy:
+      matrix:
+        include:
+          - run: default
+          - run: default-x86
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io/samsarahq
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build, tag, and push docker image to Amazon ECR Public
+        env:
+          REGISTRY: ghcr.io/samsarahq
+          REPOSITORY: git-credential-github-app-sm
+          IMAGE_TAG: ${{ github.ref_name }}-${{ matrix.arch }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+  docker-manifest:
+    runs-on: default
+    needs:
+      - docker
+    steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io/samsarahq
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push manifest
+        env:
+          REGISTRY: ghcr.io/samsarahq
+          REPOSITORY: git-credential-github-app-sm
+          IMAGE_TAG: ${{ github.ref_name }}
+        run: |
+          docker manifest create $REGISTRY/$REPOSITORY:$IMAGE_TAG $REGISTRY/$REPOSITORY:$IMAGE_TAG-amd64 $REGISTRY/$REPOSITORY:$IMAGE_TAG-arm64
+          docker manifest push $REGISTRY/$REPOSITORY:$IMAGE_TAG
