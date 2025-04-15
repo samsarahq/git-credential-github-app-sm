@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 
 	"github.com/samsarahq/github-app-credential-helper/common"
@@ -45,5 +46,5 @@ func get(secretArn *string, role *string, tokenCommand *string) {
 	}
 
 	// The output needs to be pristine, so we print here at the end only if we are sure everything is working.
-	print(output)
+	fmt.Println(output)
 }
