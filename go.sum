@@ -28,5 +28,5 @@ github.com/aws/smithy-go v1.22.2 h1:6D9hW43xKFrRx/tXXfAlIZc4JI+yQe6snnWcQyxSyLQ=
 github.com/aws/smithy-go v1.22.2/go.mod h1:irrKGvNn1InZwb2d7fkIRNucdfwR8R+Ts3wxYa/cJHg=
 github.com/golang-jwt/jwt/v5 v5.2.2 h1:Rl4B7itRWVtYIHFrSNd7vhTiz9UpLdi6gZhZ3wEeDy8=
 github.com/golang-jwt/jwt/v5 v5.2.2/go.mod h1:pqrtFR0X4osieyHYxtmOUWsAWrfe1Q5UVIyoH402zdk=
-github.com/samsarahq/github-app-credential-helper v0.0.3 h1:husJw4doeVoHU3+FR1C4xHp88D9KilbMZQ7qCe75Z68=
-github.com/samsarahq/github-app-credential-helper v0.0.3/go.mod h1:86nUY4AyLsbV68ezQtfwIWDP6Q7oCmCT/tCuGLR4tKA=
+github.com/samsarahq/github-app-credential-helper v0.0.4 h1:FW/U9+/y2jc4YbGUBFJF8BVV8FPZ5ITZ6/6XtiUBA8I=
+github.com/samsarahq/github-app-credential-helper v0.0.4/go.mod h1:86nUY4AyLsbV68ezQtfwIWDP6Q7oCmCT/tCuGLR4tKA=
