@@ -35,5 +35,5 @@ For more information on configuring helpers, refer to the [git documentation](ht
 We also recommend using a credential cache to limit the number of requests to GitHub by running this BEFORE the previous command:
 
 ```shell
-git config credential.https://github.com.helper cache --timeout 3600
+git config [--global] credential.https://github.com.helper 'cache --timeout 3600'
 ```
